@@ -9,29 +9,40 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 public class Application extends ApplicationAdapter {
 	SpriteBatch batch;
-	Texture img;
-	TextureRegion region;
-	int x = 0, y = 0;
+	Texture backgroundImg;
+	Texture coinImg;
+	int x = 1, y = 1;
+	boolean up = true, right = true;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
-		region = new TextureRegion(img, 0, 0, 100, 100);
+		backgroundImg = new Texture("background.jpg");
+		coinImg = new Texture("coin.png");
 	}
 
 	@Override
 	public void render () {
 		ScreenUtils.clear(Color.BLUE);
 		batch.begin();
-		batch.draw(img, x++, y++);
-		batch.draw(region, 100, 100);
+		batch.draw(backgroundImg, 0, 0, 512, 1024);
+
+		batch.draw(coinImg, x, y);
+		if (x + 64 >= 400 || x <= 0) {
+			right = !right;
+		}
+		if (y + 64 >= 700 || y <= 0) {
+			up = !up;
+		}
+		x = right ? x + 2 : x - 2;
+		y = up ? y + 6 : y - 6;
+
 		batch.end();
 	}
 	
 	@Override
 	public void dispose () {
 		batch.dispose();
-		img.dispose();
+		coinImg.dispose();
 	}
 }
