@@ -10,8 +10,9 @@ public class GameScreen extends BaseScreen {
 
     Texture backgroundImg;
     Texture coinImg;
-    Vector2 v = new Vector2(1, 1);
-    boolean up = true, right = true;
+    Vector2 coinPos = new Vector2(1, 1);
+    Vector2 coinV = new Vector2(0, 0);
+    Vector2 finishPos = new Vector2(1, 1);
 
     @Override
     public void show() {
@@ -25,16 +26,11 @@ public class GameScreen extends BaseScreen {
         super.render(delta);
         batch.begin();
         batch.draw(backgroundImg, 0, 0, 512, 1024);
-
-        batch.draw(coinImg, v.x, v.y);
-        if (v.x + coinImg.getWidth() >= Gdx.graphics.getWidth() || v.x <= 0) {
-            right = !right;
+        if (finishPos.cpy().sub(coinPos.cpy().add(coinImg.getWidth()/2, coinImg.getHeight()/2)).len() < 0.5f) {
+            coinV.set(0,0);
         }
-        if (v.y + coinImg.getHeight() >= Gdx.graphics.getHeight() || v.y <= 0) {
-            up = !up;
-        }
-        v.x = right ? v.x + 2 : v.x - 2;
-        v.y = up ? v.y + 6 : v.y - 6;
+        coinPos.add(coinV);
+        batch.draw(coinImg, coinPos.x, coinPos.y);
 
         batch.end();
     }
@@ -48,8 +44,8 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        v.x = screenX;
-        v.y = Gdx.graphics.getHeight() - screenY;
+        finishPos.set(screenX, Gdx.graphics.getHeight() - screenY);
+        coinV.set(finishPos.cpy().sub(coinPos.cpy().add(coinImg.getWidth()/2, coinImg.getHeight()/2))).nor();
         return super.touchDown(screenX, screenY, pointer, button);
     }
 }
