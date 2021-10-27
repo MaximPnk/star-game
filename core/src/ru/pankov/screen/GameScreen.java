@@ -13,6 +13,7 @@ public class GameScreen extends BaseScreen {
     Vector2 coinPos = new Vector2(1, 1);
     Vector2 coinV = new Vector2(0, 0);
     Vector2 finishPos = new Vector2(1, 1);
+    float x, y;
 
     @Override
     public void show() {
@@ -26,9 +27,13 @@ public class GameScreen extends BaseScreen {
         super.render(delta);
         batch.begin();
         batch.draw(backgroundImg, 0, 0, 512, 1024);
-        if (finishPos.cpy().sub(coinPos.cpy().add(coinImg.getWidth()/2, coinImg.getHeight()/2)).len() < 0.5f) {
+
+        x = finishPos.x;
+        y = finishPos.y;
+        if (finishPos.sub(coinPos.cpy().add(coinImg.getWidth()/2, coinImg.getHeight()/2)).len() < 0.5f) {
             coinV.set(0,0);
         }
+        finishPos.set(x, y);
         coinPos.add(coinV);
         batch.draw(coinImg, coinPos.x, coinPos.y);
 
