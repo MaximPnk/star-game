@@ -20,24 +20,24 @@ public class GameScreen extends BaseScreen {
         super.show();
         backgroundImg = new Texture("background.jpg");
         coinImg = new Texture("coin.png");
-        coinPos = new Vector2(1, 1);
+        coinPos = new Vector2(0, 0);
         coinCenter = new Vector2();
         coinV = new Vector2(0, 0);
-        finishPos = new Vector2(1, 1);
+        finishPos = new Vector2(0, 0);
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
         batch.begin();
-        batch.draw(backgroundImg, 0, 0, 512, 1024);
+        batch.draw(backgroundImg, -1f, -1f, 2f, 2f);
 
         coinCenter.set(coinPos).add(coinImg.getWidth() / 2, coinImg.getHeight() / 2);
         if (finishPos.dst(coinCenter) <= coinV.len()) {
             coinV.set(0,0);
         }
-        coinPos.add(coinV);
-        batch.draw(coinImg, coinPos.x, coinPos.y);
+//        coinPos.add(coinV);
+        batch.draw(coinImg, coinPos.x, coinPos.y, 1f, 1f);
 
         batch.end();
     }
