@@ -1,57 +1,95 @@
 package ru.pankov.screen;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.pankov.base.BaseScreen;
 import ru.pankov.math.Rect;
 import ru.pankov.sprite.Background;
-import ru.pankov.sprite.Coin;
+import ru.pankov.sprite.Star;
 
 public class GameScreen extends BaseScreen {
 
-    Texture bgImg;
-    Background bg;
+    private final int STAR_COUNT = 64;
 
-    Texture coinImg;
-    Coin coin;
+    private Texture bgImg;
+    private Background bg;
+    private TextureAtlas atlas;
+    private Star[] stars;
 
     @Override
     public void show() {
         super.show();
-        bgImg = new Texture("background.jpg");
+        bgImg = new Texture("bg_v3.jpg");
         bg = new Background(bgImg);
-        coinImg = new Texture("coin.png");
-        coin = new Coin(coinImg);
+        atlas = new TextureAtlas("mainAtlas.tpack");
+        stars = new Star[STAR_COUNT];
+        for (int i = 0; i < stars.length; i++) {
+            stars[i] = new Star(atlas);
+        }
     }
 
     @Override
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
         bg.resize(worldBounds);
-        coin.resize(worldBounds);
+        for (Star star : stars) {
+            star.resize(worldBounds);
+        }
     }
 
     @Override
     public void render(float delta) {
-        super.render(delta);
         batch.begin();
-        bg.draw(batch);
-        coin.draw(batch);
+        update(delta);
+        draw();
         batch.end();
+    }
+
+    private void update(float delta) {
+        for (Star star : stars) {
+            star.update(delta);
+        }
+    }
+
+    private void draw() {
+        bg.draw(batch);
+        for (Star star : stars) {
+            star.draw(batch);
+        }
+    }
+
+    @Override
+    public void hide() {
+        super.hide();
     }
 
     @Override
     public void dispose() {
         super.dispose();
         bgImg.dispose();
-        coinImg.dispose();
+        atlas.dispose();
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        return super.keyDown(keycode);
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        return super.keyUp(keycode);
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
-        super.touchDown(touch, pointer, button);
-        coin.touchDown(touch, pointer, button);
-        return false;
+        return super.touchDown(touch, pointer, button);
     }
+
+    @Override
+    public boolean touchUp(Vector2 touch, int pointer, int button) {
+        return super.touchUp(touch, pointer, button);
+    }
+
 }
