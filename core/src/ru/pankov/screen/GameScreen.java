@@ -1,58 +1,57 @@
 package ru.pankov.screen;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.pankov.base.BaseScreen;
+import ru.pankov.math.Rect;
+import ru.pankov.sprite.Background;
+import ru.pankov.sprite.Coin;
 
 public class GameScreen extends BaseScreen {
 
-    Texture backgroundImg;
+    Texture bgImg;
+    Background bg;
+
     Texture coinImg;
-    Vector2 coinPos;
-    Vector2 coinCenter;
-    Vector2 coinV;
-    Vector2 finishPos;
+    Coin coin;
 
     @Override
     public void show() {
         super.show();
-        backgroundImg = new Texture("background.jpg");
+        bgImg = new Texture("background.jpg");
+        bg = new Background(bgImg);
         coinImg = new Texture("coin.png");
-        coinPos = new Vector2(0, 0);
-        coinCenter = new Vector2();
-        coinV = new Vector2(0, 0);
-        finishPos = new Vector2(0, 0);
+        coin = new Coin(coinImg);
+    }
+
+    @Override
+    public void resize(Rect worldBounds) {
+        super.resize(worldBounds);
+        bg.resize(worldBounds);
+        coin.resize(worldBounds);
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
         batch.begin();
-        batch.draw(backgroundImg, -1f, -1f, 2f, 2f);
-
-        coinCenter.set(coinPos).add(coinImg.getWidth() / 2, coinImg.getHeight() / 2);
-        if (finishPos.dst(coinCenter) <= coinV.len()) {
-            coinV.set(0,0);
-        }
-//        coinPos.add(coinV);
-        batch.draw(coinImg, coinPos.x, coinPos.y, 1f, 1f);
-
+        bg.draw(batch);
+        coin.draw(batch);
         batch.end();
     }
 
     @Override
     public void dispose() {
         super.dispose();
+        bgImg.dispose();
         coinImg.dispose();
-        backgroundImg.dispose();
     }
 
     @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        finishPos.set(screenX, Gdx.graphics.getHeight() - screenY);
-        coinV.set(finishPos.cpy().sub(coinPos.cpy().add(coinImg.getWidth()/2, coinImg.getHeight()/2))).nor();
-        return super.touchDown(screenX, screenY, pointer, button);
+    public boolean touchDown(Vector2 touch, int pointer, int button) {
+        super.touchDown(touch, pointer, button);
+        coin.touchDown(touch, pointer, button);
+        return false;
     }
 }
