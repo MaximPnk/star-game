@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import ru.pankov.base.BaseScreen;
 import ru.pankov.math.Rect;
 import ru.pankov.sprite.Background;
+import ru.pankov.sprite.Spaceship;
 import ru.pankov.sprite.Star;
 
 public class GameScreen extends BaseScreen {
@@ -17,6 +18,7 @@ public class GameScreen extends BaseScreen {
     private Background bg;
     private TextureAtlas atlas;
     private Star[] stars;
+    private Spaceship spaceship;
 
     @Override
     public void show() {
@@ -28,6 +30,7 @@ public class GameScreen extends BaseScreen {
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star(atlas);
         }
+        spaceship = new Spaceship(atlas);
     }
 
     @Override
@@ -37,6 +40,7 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars) {
             star.resize(worldBounds);
         }
+        spaceship.resize(worldBounds);
     }
 
     @Override
@@ -51,6 +55,7 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars) {
             star.update(delta);
         }
+        spaceship.update(delta);
     }
 
     private void draw() {
@@ -58,6 +63,7 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars) {
             star.draw(batch);
         }
+        spaceship.draw(batch);
     }
 
     @Override
@@ -74,22 +80,22 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public boolean keyDown(int keycode) {
-        return super.keyDown(keycode);
+        return spaceship.keyDown(keycode);
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        return super.keyUp(keycode);
+        return spaceship.keyUp(keycode);
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
-        return super.touchDown(touch, pointer, button);
+        return spaceship.touchDown(touch, pointer, button);
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer, int button) {
-        return super.touchUp(touch, pointer, button);
+        return spaceship.touchUp(touch, pointer, button);
     }
 
 }
