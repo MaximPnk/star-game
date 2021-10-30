@@ -41,6 +41,7 @@ public class MainSpaceship extends Sprite {
         this.bulletPool = bulletPool;
         this.bulletRegion = atlas.findRegion("bulletMainShip");
         bulletV = new Vector2(0, 0.5f);
+        shoot();
     }
 
     @Override
@@ -72,8 +73,20 @@ public class MainSpaceship extends Sprite {
     }
 
     private void shoot() {
-        Bullet bullet = bulletPool.get();
-        bullet.set(this, bulletRegion, this.pos, bulletV, worldBounds, bulletHeight, bulletDmg);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        Thread.sleep(150);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Bullet bullet = bulletPool.get();
+                    bullet.set(MainSpaceship.this, bulletRegion, MainSpaceship.this.pos, bulletV, worldBounds, bulletHeight, bulletDmg);
+                }
+            }
+        }).start();
     }
 
     @Override
@@ -112,8 +125,6 @@ public class MainSpaceship extends Sprite {
             rightPressed = true;
             v.add(V_DELTA, 0);
             return true;
-        } else if (keycode == W || keycode == UP) {
-            shoot();
         }
         return false;
     }
