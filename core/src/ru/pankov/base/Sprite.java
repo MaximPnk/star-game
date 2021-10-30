@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.pankov.math.Rect;
+import ru.pankov.utils.Regions;
 
 public class Sprite extends Rect {
 
@@ -12,12 +13,20 @@ public class Sprite extends Rect {
     protected float scale = 1f;
     protected int frame;
     protected TextureRegion[] regions;
+    protected boolean destroyed;
+
+    public Sprite() {
+    }
 
     public Sprite(TextureRegion... regions) {
         if (regions == null) {
             throw new IllegalArgumentException("region must be not null");
         }
         this.regions = regions;
+    }
+
+    public Sprite(TextureRegion region, int rows, int cols, int frames) {
+        this.regions = Regions.split(region, rows, cols, frames);
     }
 
     public void setProportionalSize(float height) {
@@ -72,5 +81,17 @@ public class Sprite extends Rect {
 
     public void setScale(float scale) {
         this.scale = scale;
+    }
+
+    public void destroy() {
+        destroyed = true;
+    }
+
+    public void flushDestroy() {
+        destroyed = false;
+    }
+
+    public boolean isDestroyed() {
+        return destroyed;
     }
 }
