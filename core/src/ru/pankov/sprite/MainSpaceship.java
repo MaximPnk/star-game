@@ -5,6 +5,8 @@ import static com.badlogic.gdx.Input.Keys.D;
 import static com.badlogic.gdx.Input.Keys.LEFT;
 import static com.badlogic.gdx.Input.Keys.RIGHT;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -25,6 +27,7 @@ public class MainSpaceship extends Sprite {
     private final Vector2 bulletV;
     private final float bulletHeight = 0.017f;
     private final int bulletDmg = 1;
+    Sound bulletSound;
 
     private Vector2 v;
     private boolean leftPressed;
@@ -40,6 +43,7 @@ public class MainSpaceship extends Sprite {
         this.bulletPool = bulletPool;
         this.bulletRegion = atlas.findRegion("bulletMainShip");
         bulletV = new Vector2(0, 0.5f);
+        bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
         autoShoot(150);
     }
 
@@ -78,12 +82,13 @@ public class MainSpaceship extends Sprite {
             public void run() {
                 shoot();
             }
-        },0,0.15f);
+        },0,0.25f);
     }
 
     private void shoot() {
         Bullet bullet = bulletPool.get();
         bullet.set(MainSpaceship.this, bulletRegion, MainSpaceship.this.pos, bulletV, worldBounds, bulletHeight, bulletDmg);
+        bulletSound.play(0.01f);
         /*new Thread(new Runnable() {
             @Override
             public void run() {
