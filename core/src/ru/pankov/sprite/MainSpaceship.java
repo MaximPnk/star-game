@@ -4,13 +4,12 @@ import static com.badlogic.gdx.Input.Keys.A;
 import static com.badlogic.gdx.Input.Keys.D;
 import static com.badlogic.gdx.Input.Keys.LEFT;
 import static com.badlogic.gdx.Input.Keys.RIGHT;
-import static com.badlogic.gdx.Input.Keys.UP;
-import static com.badlogic.gdx.Input.Keys.W;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
 
 import ru.pankov.base.Sprite;
 import ru.pankov.math.Rect;
@@ -41,7 +40,7 @@ public class MainSpaceship extends Sprite {
         this.bulletPool = bulletPool;
         this.bulletRegion = atlas.findRegion("bulletMainShip");
         bulletV = new Vector2(0, 0.5f);
-        shoot();
+        autoShoot(150);
     }
 
     @Override
@@ -72,8 +71,20 @@ public class MainSpaceship extends Sprite {
         super.draw(batch);
     }
 
+    private void autoShoot(int delay) {
+        Timer timer=new Timer();
+        timer.scheduleTask(new Timer.Task() {
+            @Override
+            public void run() {
+                shoot();
+            }
+        },0,0.15f);
+    }
+
     private void shoot() {
-        new Thread(new Runnable() {
+        Bullet bullet = bulletPool.get();
+        bullet.set(MainSpaceship.this, bulletRegion, MainSpaceship.this.pos, bulletV, worldBounds, bulletHeight, bulletDmg);
+        /*new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
@@ -86,7 +97,7 @@ public class MainSpaceship extends Sprite {
                     bullet.set(MainSpaceship.this, bulletRegion, MainSpaceship.this.pos, bulletV, worldBounds, bulletHeight, bulletDmg);
                 }
             }
-        }).start();
+        }).start();*/
     }
 
     @Override
