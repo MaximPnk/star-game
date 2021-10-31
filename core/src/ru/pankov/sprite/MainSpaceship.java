@@ -13,30 +13,20 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Timer;
 
+import ru.pankov.base.Ship;
 import ru.pankov.base.Sprite;
 import ru.pankov.math.Rect;
 import ru.pankov.pool.BulletPool;
 
-public class MainSpaceship extends Sprite {
+public class MainSpaceship extends Ship {
 
     private static final float V_DELTA = 0.5f;
     private static final float BOTTOM_MARGIN = 0.04f;
-    private static final float BULLET_INTERVAL = 0.15f;
 
-    private final BulletPool bulletPool;
-    private final TextureRegion bulletRegion;
-    private final Vector2 bulletV;
-    private final float bulletHeight = 0.012f;
-    private final int bulletDmg = 1;
-    private final Sound bulletSound;
-    private float bulletDelta;
-
-    private Vector2 v;
     private boolean leftPressed;
     private boolean rightPressed;
-    private Rect worldBounds;
-    private int leftPointer;
-    private int rightPointer;
+    private int leftPointer = -1;
+    private int rightPointer = -1;
 
     public MainSpaceship(TextureAtlas atlas, BulletPool bulletPool, Sound bulletSound) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
@@ -46,6 +36,9 @@ public class MainSpaceship extends Sprite {
         this.bulletRegion = atlas.findRegion("bulletMainShip");
         bulletV = new Vector2(0, 0.5f);
         this.bulletSound = bulletSound;
+        bulletInterval = 0.15f;
+        bulletVolume = 0.2f;
+        bulletPos = new Vector2();
     }
 
     @Override
@@ -57,12 +50,9 @@ public class MainSpaceship extends Sprite {
 
     @Override
     public void update(float delta) {
-        if ((bulletDelta += delta) >= BULLET_INTERVAL) {
-            shoot();
-            bulletDelta = 0;
-        }
+        bulletPos.set(pos.x, getTop());
         checkBounds();
-        pos.mulAdd(v, delta);
+        super.update(delta);
     }
 
     private void checkBounds() {
@@ -77,12 +67,6 @@ public class MainSpaceship extends Sprite {
     @Override
     public void draw(SpriteBatch batch) {
         super.draw(batch);
-    }
-
-    private void shoot() {
-        Bullet bullet = bulletPool.get();
-        bullet.set(this, bulletRegion, pos, bulletV, worldBounds, bulletHeight, bulletDmg);
-        bulletSound.play(0.01f);
     }
 
     @Override

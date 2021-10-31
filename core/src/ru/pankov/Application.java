@@ -12,7 +12,7 @@ public class Application extends Game {
 
 	@Override
 	public void create () {
-		Music music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
+		music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
 		music.setVolume(0.1f);
 		music.setLooping(true);
 		music.play();
@@ -22,7 +22,7 @@ public class Application extends Game {
 
 	@Override
 	public void dispose() {
-		super.dispose();
 		music.dispose();
+		super.dispose();
 	}
 }

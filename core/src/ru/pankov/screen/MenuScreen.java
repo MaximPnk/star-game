@@ -16,7 +16,7 @@ import ru.pankov.sprite.Star;
 public class MenuScreen extends BaseScreen {
 
     private final Game game;
-    private final int STAR_COUNT = 256;
+    private final int STAR_COUNT = 128;
 
     private TextureAtlas atlas;
     private Texture bgImg;

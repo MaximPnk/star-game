@@ -19,6 +19,7 @@ public abstract class SpritePool<T extends Sprite> {
         } else {
             object = free.remove(free.size() - 1);
         }
+        System.out.println(getClass().getSimpleName() + " active/free: " + active.size() + "/" + free.size());
         active.add(object);
         return object;
     }
@@ -53,6 +54,7 @@ public abstract class SpritePool<T extends Sprite> {
         object.flushDestroy();
         if (active.remove(object)) {
             free.add(object);
+            System.out.println(getClass().getSimpleName() + " active/free: " + active.size() + "/" + free.size());
         }
     }
 
