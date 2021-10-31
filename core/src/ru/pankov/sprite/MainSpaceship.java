@@ -4,13 +4,14 @@ import static com.badlogic.gdx.Input.Keys.A;
 import static com.badlogic.gdx.Input.Keys.D;
 import static com.badlogic.gdx.Input.Keys.LEFT;
 import static com.badlogic.gdx.Input.Keys.RIGHT;
-import static com.badlogic.gdx.Input.Keys.UP;
-import static com.badlogic.gdx.Input.Keys.W;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
 
 import ru.pankov.base.Sprite;
 import ru.pankov.math.Rect;
@@ -26,6 +27,7 @@ public class MainSpaceship extends Sprite {
     private final Vector2 bulletV;
     private final float bulletHeight = 0.017f;
     private final int bulletDmg = 1;
+    Sound bulletSound;
 
     private Vector2 v;
     private boolean leftPressed;
@@ -41,6 +43,8 @@ public class MainSpaceship extends Sprite {
         this.bulletPool = bulletPool;
         this.bulletRegion = atlas.findRegion("bulletMainShip");
         bulletV = new Vector2(0, 0.5f);
+        bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
+        autoShoot(150);
     }
 
     @Override
@@ -71,9 +75,34 @@ public class MainSpaceship extends Sprite {
         super.draw(batch);
     }
 
+    private void autoShoot(int delay) {
+        Timer timer=new Timer();
+        timer.scheduleTask(new Timer.Task() {
+            @Override
+            public void run() {
+                shoot();
+            }
+        },0,0.25f);
+    }
+
     private void shoot() {
         Bullet bullet = bulletPool.get();
-        bullet.set(this, bulletRegion, this.pos, bulletV, worldBounds, bulletHeight, bulletDmg);
+        bullet.set(MainSpaceship.this, bulletRegion, MainSpaceship.this.pos, bulletV, worldBounds, bulletHeight, bulletDmg);
+        bulletSound.play(0.01f);
+        /*new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        Thread.sleep(150);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Bullet bullet = bulletPool.get();
+                    bullet.set(MainSpaceship.this, bulletRegion, MainSpaceship.this.pos, bulletV, worldBounds, bulletHeight, bulletDmg);
+                }
+            }
+        }).start();*/
     }
 
     @Override
@@ -112,8 +141,6 @@ public class MainSpaceship extends Sprite {
             rightPressed = true;
             v.add(V_DELTA, 0);
             return true;
-        } else if (keycode == W || keycode == UP) {
-            shoot();
         }
         return false;
     }

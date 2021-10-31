@@ -25,9 +25,9 @@ public class GameScreen extends BaseScreen {
     @Override
     public void show() {
         super.show();
-        bgImg = new Texture("bg_v3.jpg");
+        bgImg = new Texture("textures/bg_v3.jpg");
         bg = new Background(bgImg);
-        atlas = new TextureAtlas("mainAtlas.tpack");
+        atlas = new TextureAtlas("textures/mainAtlas.tpack");
         stars = new Star[STAR_COUNT];
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star(atlas);
