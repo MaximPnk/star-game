@@ -78,7 +78,7 @@ public class GameScreen extends BaseScreen {
         }
         mainSpaceship.update(delta);
         bulletPool.updateAllActive(delta);
-        enemyPool.updateAllActive(delta);
+        enemyPool.updateAllActive(delta, mainSpaceship);
         enemyGenerator.generate(delta);
     }
 

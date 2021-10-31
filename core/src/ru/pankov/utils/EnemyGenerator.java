@@ -11,7 +11,7 @@ import ru.pankov.sprite.EnemySpaceship;
 
 public class EnemyGenerator {
 
-    private static final float GENERATE_INTERVAL = 3f;
+    private static final float GENERATE_INTERVAL = 1;
 
     private static final float SMALL_HEIGHT = 0.1f;
     private static final float SMALL_BULLET_HEIGHT = 0.01f;
@@ -38,7 +38,7 @@ public class EnemyGenerator {
     private final Vector2 bigV = new Vector2(0f, -0.05f);
     private final Vector2 bigBulletV = new Vector2(0f, -0.2f);
 
-    private float generateTimer;
+    private float generateTimer = GENERATE_INTERVAL;
 
     private final EnemyPool enemyPool;
     private final Rect worldBounds;

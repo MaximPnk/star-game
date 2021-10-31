@@ -100,6 +100,14 @@ public class Rect {
         return getLeft() > other.getRight() || getRight() < other.getLeft() || getBottom() > other.getTop() || getTop() < other.getBottom();
     }
 
+    public boolean isIntersect(Rect other) {
+        float widthDiff = Math.abs(pos.x - other.pos.x);
+        float widthAverage = getHalfWidth() + other.getHalfWidth();
+        float heightDiff = Math.abs(pos.y - other.pos.y);
+        float heightAverage = getHalfHeight() + other.getHalfHeight();
+        return (widthDiff <= widthAverage) && (heightDiff <= heightAverage);
+    }
+
     @Override
     public String toString() {
         return "Rectangle: pos" + pos + " size(" + getWidth() + ", " + getHeight() + ")";
