@@ -7,7 +7,9 @@ import com.badlogic.gdx.audio.Music;
 import ru.pankov.screen.MenuScreen;
 
 public class Application extends Game {
-	
+
+	private Music music;
+
 	@Override
 	public void create () {
 		Music music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
@@ -18,4 +20,9 @@ public class Application extends Game {
 		setScreen(new MenuScreen(this));
 	}
 
+	@Override
+	public void dispose() {
+		super.dispose();
+		music.dispose();
+	}
 }

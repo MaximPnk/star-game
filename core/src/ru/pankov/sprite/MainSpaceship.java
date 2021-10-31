@@ -21,13 +21,15 @@ public class MainSpaceship extends Sprite {
 
     private static final float V_DELTA = 0.5f;
     private static final float BOTTOM_MARGIN = 0.04f;
+    private static final float BULLET_INTERVAL = 0.15f;
 
     private final BulletPool bulletPool;
     private final TextureRegion bulletRegion;
     private final Vector2 bulletV;
-    private final float bulletHeight = 0.017f;
+    private final float bulletHeight = 0.012f;
     private final int bulletDmg = 1;
-    Sound bulletSound;
+    private final Sound bulletSound;
+    private float bulletDelta;
 
     private Vector2 v;
     private boolean leftPressed;
@@ -36,15 +38,14 @@ public class MainSpaceship extends Sprite {
     private int leftPointer;
     private int rightPointer;
 
-    public MainSpaceship(TextureAtlas atlas, BulletPool bulletPool) {
+    public MainSpaceship(TextureAtlas atlas, BulletPool bulletPool, Sound bulletSound) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
         v = new Vector2(0, 0);
         setLeft(0 - getHalfWidth());
         this.bulletPool = bulletPool;
         this.bulletRegion = atlas.findRegion("bulletMainShip");
         bulletV = new Vector2(0, 0.5f);
-        bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
-        autoShoot(150);
+        this.bulletSound = bulletSound;
     }
 
     @Override
@@ -52,11 +53,14 @@ public class MainSpaceship extends Sprite {
         this.worldBounds = worldBounds;
         setProportionalSize(0.12f);
         setBottom(worldBounds.getBottom() + BOTTOM_MARGIN);
-        setLeft(getLeft());
     }
 
     @Override
     public void update(float delta) {
+        if ((bulletDelta += delta) >= BULLET_INTERVAL) {
+            shoot();
+            bulletDelta = 0;
+        }
         checkBounds();
         pos.mulAdd(v, delta);
     }
@@ -75,34 +79,10 @@ public class MainSpaceship extends Sprite {
         super.draw(batch);
     }
 
-    private void autoShoot(int delay) {
-        Timer timer=new Timer();
-        timer.scheduleTask(new Timer.Task() {
-            @Override
-            public void run() {
-                shoot();
-            }
-        },0,0.25f);
-    }
-
     private void shoot() {
         Bullet bullet = bulletPool.get();
-        bullet.set(MainSpaceship.this, bulletRegion, MainSpaceship.this.pos, bulletV, worldBounds, bulletHeight, bulletDmg);
+        bullet.set(this, bulletRegion, pos, bulletV, worldBounds, bulletHeight, bulletDmg);
         bulletSound.play(0.01f);
-        /*new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        Thread.sleep(150);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    Bullet bullet = bulletPool.get();
-                    bullet.set(MainSpaceship.this, bulletRegion, MainSpaceship.this.pos, bulletV, worldBounds, bulletHeight, bulletDmg);
-                }
-            }
-        }).start();*/
     }
 
     @Override

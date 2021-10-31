@@ -1,5 +1,7 @@
 package ru.pankov.screen;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -21,6 +23,7 @@ public class GameScreen extends BaseScreen {
     private Star[] stars;
     private MainSpaceship mainSpaceship;
     private BulletPool bulletPool;
+    private Sound bulletSound;
 
     @Override
     public void show() {
@@ -33,7 +36,8 @@ public class GameScreen extends BaseScreen {
             stars[i] = new Star(atlas);
         }
         bulletPool = new BulletPool();
-        mainSpaceship = new MainSpaceship(atlas, bulletPool);
+        bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
+        mainSpaceship = new MainSpaceship(atlas, bulletPool, bulletSound);
     }
 
     @Override
@@ -87,6 +91,7 @@ public class GameScreen extends BaseScreen {
         bgImg.dispose();
         atlas.dispose();
         bulletPool.dispose();
+        bulletSound.dispose();
     }
 
     @Override
