@@ -20,6 +20,7 @@ public class Ship extends Sprite {
     protected float currentBulletDelta;
     protected float bulletVolume;
     protected Vector2 bulletPos;
+    protected boolean ready;
 
     protected int hp;
     protected Vector2 v;
@@ -34,9 +35,11 @@ public class Ship extends Sprite {
 
     @Override
     public void update(float delta) {
-        if ((currentBulletDelta += delta) >= bulletInterval) {
-            shoot(bulletVolume);
-            currentBulletDelta = 0;
+        if (ready) {
+            if ((currentBulletDelta += delta) >= bulletInterval) {
+                shoot(bulletVolume);
+                currentBulletDelta = 0;
+            }
         }
         pos.mulAdd(v, delta);
     }

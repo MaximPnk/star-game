@@ -39,6 +39,7 @@ public class MainSpaceship extends Ship {
         bulletInterval = 0.15f;
         bulletVolume = 0.2f;
         bulletPos = new Vector2();
+        ready = true;
     }
 
     @Override

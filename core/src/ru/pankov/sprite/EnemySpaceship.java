@@ -10,6 +10,9 @@ import ru.pankov.pool.BulletPool;
 
 public class EnemySpaceship extends Ship {
 
+    private final Vector2 startV;
+    private final Vector2 gameV;
+
     public EnemySpaceship(BulletPool bulletPool, Rect worldBounds, Sound bulletSound) {
         this.bulletPool = bulletPool;
         this.worldBounds = worldBounds;
@@ -18,10 +21,17 @@ public class EnemySpaceship extends Ship {
         bulletV = new Vector2();
         bulletVolume = 0.05f;
         bulletPos = new Vector2();
+        startV = new Vector2(0, -0.25f);
+        gameV = new Vector2();
     }
 
     @Override
     public void update(float delta) {
+        if (!ready && getTop() <= worldBounds.getTop()) {
+            v.set(gameV);
+            currentBulletDelta = bulletInterval;
+            ready = true;
+        }
         bulletPos.set(pos.x, getBottom());
         super.update(delta);
         if (isOutside(worldBounds)) {
@@ -40,8 +50,10 @@ public class EnemySpaceship extends Ship {
             int bulletDamage,
             float bulletInterval
     ) {
+        ready = false;
         this.regions = regions;
-        this.v.set(v);
+        this.gameV.set(v);
+        this.v.set(startV);
         setProportionalSize(height);
         this.hp = hp;
         this.bulletRegion = bulletRegion;
