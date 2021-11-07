@@ -25,6 +25,7 @@ public class MainSpaceship extends Ship {
     private static final float BULLET_VOLUME = 0.2f;
     private static final int INVALID_POINTER = -1;
     private static final float EXPLOSION_VOLUME = 0.3f;
+    private static final int HP = 10;
 
     private boolean leftPressed;
     private boolean rightPressed;
@@ -46,6 +47,7 @@ public class MainSpaceship extends Ship {
         this.explosionPool = explosionPool;
         this.explosionSound = explosionSound;
         explosionVolume = EXPLOSION_VOLUME;
+        this.hp = HP;
     }
 
     @Override
@@ -88,6 +90,17 @@ public class MainSpaceship extends Ship {
         return true;
     }
 
+    public void reset() {
+        v = new Vector2();
+        setLeft(0 - getHalfWidth());
+        hp = HP;
+        destroyed = false;
+        leftPressed = false;
+        rightPressed = false;
+        leftPointer = INVALID_POINTER;
+        rightPointer = INVALID_POINTER;
+    }
+
     @Override
     public boolean touchUp(Vector2 touch, int pointer, int button) {
         if (pointer == leftPointer) {
@@ -128,5 +141,7 @@ public class MainSpaceship extends Ship {
         }
         return false;
     }
+
+
 
 }
