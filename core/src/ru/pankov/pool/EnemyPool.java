@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 import ru.pankov.base.SpritePool;
 import ru.pankov.math.Rect;
 import ru.pankov.sprite.EnemySpaceship;
+import ru.pankov.sprite.MainSpaceship;
 
 public class EnemyPool extends SpritePool<EnemySpaceship> {
 
@@ -21,5 +22,13 @@ public class EnemyPool extends SpritePool<EnemySpaceship> {
     @Override
     protected EnemySpaceship create() {
         return new EnemySpaceship(bulletPool, worldBounds, bulletSound);
+    }
+
+    public void updateAllActive(float delta, MainSpaceship mainSpaceship) {
+        for (EnemySpaceship s : active) {
+            if (!s.isDestroyed()) {
+                s.update(delta, mainSpaceship);
+            }
+        }
     }
 }
