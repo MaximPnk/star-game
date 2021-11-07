@@ -24,10 +24,10 @@ public class EnemyPool extends SpritePool<EnemySpaceship> {
         return new EnemySpaceship(bulletPool, worldBounds, bulletSound);
     }
 
-    public void updateAllActive(float delta, MainSpaceship mainSpaceship) {
+    public void updateAllActive(float delta) {
         for (EnemySpaceship s : active) {
             if (!s.isDestroyed()) {
-                s.update(delta, mainSpaceship);
+                s.update(delta);
             }
         }
     }

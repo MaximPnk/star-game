@@ -11,6 +11,7 @@ import ru.pankov.math.Rect;
 import ru.pankov.pool.BulletPool;
 import ru.pankov.pool.EnemyPool;
 import ru.pankov.sprite.Background;
+import ru.pankov.sprite.EnemySpaceship;
 import ru.pankov.sprite.MainSpaceship;
 import ru.pankov.sprite.Star;
 import ru.pankov.utils.EnemyGenerator;
@@ -78,7 +79,12 @@ public class GameScreen extends BaseScreen {
         }
         mainSpaceship.update(delta);
         bulletPool.updateAllActive(delta);
-        enemyPool.updateAllActive(delta, mainSpaceship);
+        enemyPool.updateAllActive(delta);
+        for (EnemySpaceship e : enemyPool.getAllActive()) {
+            if (e.isIntersect(mainSpaceship)) {
+                e.destroy();
+            }
+        }
         enemyGenerator.generate(delta);
     }
 

@@ -42,13 +42,6 @@ public class EnemySpaceship extends Ship {
         }
     }
 
-    public void update(float delta, MainSpaceship mainSpaceship) {
-        update(delta);
-        if (isIntersect(mainSpaceship)) {
-            destroy();
-        }
-    }
-
     public void set(
             TextureRegion[] regions,
             Vector2 v,
