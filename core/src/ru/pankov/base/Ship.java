@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import ru.pankov.math.Rect;
 import ru.pankov.pool.BulletPool;
+import ru.pankov.pool.ExplosionPool;
 import ru.pankov.sprite.Bullet;
 
 public class Ship extends Sprite {
@@ -25,6 +26,10 @@ public class Ship extends Sprite {
     protected boolean ready;
 
     protected float currentDamageDelta = DAMAGE_INTERVAL;
+
+    protected ExplosionPool explosionPool;
+    protected Sound explosionSound;
+    protected float explosionVolume;
 
     protected int hp;
     protected Vector2 v;
@@ -53,6 +58,12 @@ public class Ship extends Sprite {
         }
     }
 
+    @Override
+    public void destroy() {
+        super.destroy();
+        explode();
+    }
+
     protected void shoot(float volume) {
         Bullet bullet = bulletPool.get();
         bullet.set(this, bulletRegion, bulletPos, bulletV, worldBounds, bulletHeight, bulletDmg);
@@ -67,6 +78,11 @@ public class Ship extends Sprite {
 
         currentDamageDelta = 0;
         frame = 1;
+    }
+
+    public void explode() {
+        explosionPool.get().set(this.pos, getHeight());
+        explosionSound.play(explosionVolume);
     }
 
     public int getHp() {

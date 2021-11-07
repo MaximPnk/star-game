@@ -16,19 +16,19 @@ public class EnemyGenerator {
     private static final float SMALL_HEIGHT = 0.1f;
     private static final float SMALL_BULLET_HEIGHT = 0.01f;
     private static final int SMALL_BULLET_DAMAGE = 1;
-    private static final float SMALL_BULLET_INTERVAL = 1f;
+    private static final float SMALL_BULLET_INTERVAL = 2f;
     private static final int SMALL_HP = 1;
 
     private static final float MEDIUM_HEIGHT = 0.15f;
     private static final float MEDIUM_BULLET_HEIGHT = 0.02f;
     private static final int MEDIUM_BULLET_DAMAGE = 5;
-    private static final float MEDIUM_BULLET_INTERVAL = 2.5f;
+    private static final float MEDIUM_BULLET_INTERVAL = 3f;
     private static final int MEDIUM_HP = 5;
 
     private static final float BIG_HEIGHT = 0.2f;
     private static final float BIG_BULLET_HEIGHT = 0.04f;
     private static final int BIG_BULLET_DAMAGE = 10;
-    private static final float BIG_BULLET_INTERVAL = 5f;
+    private static final float BIG_BULLET_INTERVAL = 4f;
     private static final int BIG_HP = 10;
 
     private final Vector2 smallV = new Vector2(0f, -0.2f);

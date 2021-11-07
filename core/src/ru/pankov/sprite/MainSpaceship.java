@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import ru.pankov.base.Ship;
 import ru.pankov.math.Rect;
 import ru.pankov.pool.BulletPool;
+import ru.pankov.pool.ExplosionPool;
 
 public class MainSpaceship extends Ship {
 
@@ -23,13 +24,14 @@ public class MainSpaceship extends Ship {
     private static final float BULLET_INTERVAL = 0.15f;
     private static final float BULLET_VOLUME = 0.2f;
     private static final int INVALID_POINTER = -1;
+    private static final float EXPLOSION_VOLUME = 0.3f;
 
     private boolean leftPressed;
     private boolean rightPressed;
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
 
-    public MainSpaceship(TextureAtlas atlas, BulletPool bulletPool, Sound bulletSound) {
+    public MainSpaceship(TextureAtlas atlas, BulletPool bulletPool, Sound bulletSound, ExplosionPool explosionPool, Sound explosionSound) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
         v = new Vector2();
         setLeft(0 - getHalfWidth());
@@ -41,6 +43,9 @@ public class MainSpaceship extends Ship {
         bulletVolume = BULLET_VOLUME;
         bulletPos = new Vector2();
         ready = true;
+        this.explosionPool = explosionPool;
+        this.explosionSound = explosionSound;
+        explosionVolume = EXPLOSION_VOLUME;
     }
 
     @Override

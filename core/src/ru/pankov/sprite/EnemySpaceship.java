@@ -7,16 +7,18 @@ import com.badlogic.gdx.math.Vector2;
 import ru.pankov.base.Ship;
 import ru.pankov.math.Rect;
 import ru.pankov.pool.BulletPool;
+import ru.pankov.pool.ExplosionPool;
 
 public class EnemySpaceship extends Ship {
 
     private static final float BULLET_VOLUME = 0.05f;
     private static final float START_V_Y = -0.25f;
+    private static final float EXPLOSION_VOLUME = 0.05f;
 
     private final Vector2 startV;
     private final Vector2 gameV;
 
-    public EnemySpaceship(BulletPool bulletPool, Rect worldBounds, Sound bulletSound) {
+    public EnemySpaceship(BulletPool bulletPool, Rect worldBounds, Sound bulletSound, ExplosionPool explosionPool, Sound explosionSound) {
         this.bulletPool = bulletPool;
         this.worldBounds = worldBounds;
         v = new Vector2();
@@ -26,6 +28,9 @@ public class EnemySpaceship extends Ship {
         bulletPos = new Vector2();
         startV = new Vector2(0, START_V_Y);
         gameV = new Vector2();
+        this.explosionPool = explosionPool;
+        this.explosionSound = explosionSound;
+        explosionVolume = EXPLOSION_VOLUME;
     }
 
     @Override
