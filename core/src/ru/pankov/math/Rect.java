@@ -101,11 +101,15 @@ public class Rect {
     }
 
     public boolean isIntersect(Rect other) {
+        return isIntersect(other, 1, 1);
+    }
+
+    public boolean isIntersect(Rect other, float widthProp, float heightProp) {
         float widthDiff = Math.abs(pos.x - other.pos.x);
         float widthAverage = getHalfWidth() + other.getHalfWidth();
         float heightDiff = Math.abs(pos.y - other.pos.y);
         float heightAverage = getHalfHeight() + other.getHalfHeight();
-        return (widthDiff <= widthAverage) && (heightDiff <= heightAverage);
+        return (widthDiff <= widthAverage * widthProp) && (heightDiff <= heightAverage * heightProp);
     }
 
     @Override

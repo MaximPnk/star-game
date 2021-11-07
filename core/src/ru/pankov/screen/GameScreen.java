@@ -11,6 +11,7 @@ import ru.pankov.math.Rect;
 import ru.pankov.pool.BulletPool;
 import ru.pankov.pool.EnemyPool;
 import ru.pankov.sprite.Background;
+import ru.pankov.sprite.Bullet;
 import ru.pankov.sprite.EnemySpaceship;
 import ru.pankov.sprite.MainSpaceship;
 import ru.pankov.sprite.Star;
@@ -18,7 +19,12 @@ import ru.pankov.utils.EnemyGenerator;
 
 public class GameScreen extends BaseScreen {
 
-    private final int STAR_COUNT = 64;
+    private static final int STAR_COUNT = 64;
+
+    private static final float BULLET_HEIGHT_COLLISION = 0.7f;
+    private static final float BULLET_WIDTH_COLLISION = 1f;
+    private static final float ENEMY_HEIGHT_COLLISION = 0.5f;
+    private static final float ENEMY_WIDTH_COLLISION = 0.9f;
 
     private Texture bgImg;
     private Background bg;
@@ -80,12 +86,33 @@ public class GameScreen extends BaseScreen {
         mainSpaceship.update(delta);
         bulletPool.updateAllActive(delta);
         enemyPool.updateAllActive(delta);
+        checkCollisions();
+        enemyGenerator.generate(delta);
+    }
+
+    private void checkCollisions() {
         for (EnemySpaceship e : enemyPool.getAllActive()) {
-            if (e.isIntersect(mainSpaceship)) {
+            if (e.isIntersect(mainSpaceship, ENEMY_WIDTH_COLLISION, ENEMY_HEIGHT_COLLISION)) {
                 e.destroy();
+                mainSpaceship.damage(e.getHp() * 2);
             }
         }
-        enemyGenerator.generate(delta);
+
+        for (Bullet b : bulletPool.getAllActive()) {
+            if (b.getOwner() == mainSpaceship) {
+                for (EnemySpaceship e : enemyPool.getAllActive()) {
+                    if (e.isIntersect(b, BULLET_WIDTH_COLLISION, BULLET_HEIGHT_COLLISION)) {
+                        e.damage(b.getDamage());
+                        b.destroy();
+                    }
+                }
+            } else {
+                if (mainSpaceship.isIntersect(b, 1, 0.7f)) {
+                    mainSpaceship.damage(b.getDamage());
+                    b.destroy();
+                }
+            }
+        }
     }
 
     private void draw() {
