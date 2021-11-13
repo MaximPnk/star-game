@@ -18,18 +18,21 @@ public class EnemyGenerator {
     private static final int SMALL_BULLET_DAMAGE = 1;
     private static final float SMALL_BULLET_INTERVAL = 2f;
     private static final int SMALL_HP = 1;
+    private static final int SMALL_SCORE = 100;
 
     private static final float MEDIUM_HEIGHT = 0.15f;
     private static final float MEDIUM_BULLET_HEIGHT = 0.02f;
     private static final int MEDIUM_BULLET_DAMAGE = 5;
     private static final float MEDIUM_BULLET_INTERVAL = 3f;
     private static final int MEDIUM_HP = 5;
+    private static final int MEDIUM_SCORE = 250;
 
     private static final float BIG_HEIGHT = 0.2f;
     private static final float BIG_BULLET_HEIGHT = 0.04f;
     private static final int BIG_BULLET_DAMAGE = 10;
     private static final float BIG_BULLET_INTERVAL = 4f;
     private static final int BIG_HP = 10;
+    private static final int BIG_SCORE = 500;
 
     private final Vector2 smallV = new Vector2(0f, -0.2f);
     private final Vector2 smallBulletV = new Vector2(0f, -0.3f);
@@ -37,6 +40,8 @@ public class EnemyGenerator {
     private final Vector2 mediumBulletV = new Vector2(0f, -0.25f);
     private final Vector2 bigV = new Vector2(0f, -0.05f);
     private final Vector2 bigBulletV = new Vector2(0f, -0.2f);
+
+    private final static float SCORE_INCREMENT = 0.25f;
 
     private float generateTimer = GENERATE_INTERVAL;
 
@@ -60,10 +65,10 @@ public class EnemyGenerator {
         level = 1;
     }
 
-    public void generate(float delta, int frags) {
-        level = frags / 2 + 1;
+    public void generate(float delta, int score) {
+        level = Math.max(level, score / (int) (1 + 2000 * (level * SCORE_INCREMENT)) + 1);
 
-        if ((generateTimer += delta) >= GENERATE_INTERVAL - level * 0.05) {
+        if ((generateTimer += delta) >= GENERATE_INTERVAL - level * SCORE_INCREMENT / 5) {
             generateTimer = 0;
             EnemySpaceship enemy = enemyPool.get();
             double type = Math.random();
@@ -72,36 +77,41 @@ public class EnemyGenerator {
                         smallRegions,
                         smallV,
                         SMALL_HEIGHT,
-                        SMALL_HP,
+                        (int) (SMALL_HP * (1 + level * SCORE_INCREMENT)),
                         bulletRegion,
                         SMALL_BULLET_HEIGHT,
                         smallBulletV,
-                        SMALL_BULLET_DAMAGE * level,
-                        SMALL_BULLET_INTERVAL
+                        (int) (SMALL_BULLET_DAMAGE * (1 + level * SCORE_INCREMENT)),
+                        SMALL_BULLET_INTERVAL,
+                        (int) (SMALL_SCORE * (1 + level * SCORE_INCREMENT))
                 );
             } else if (type < 0.9) {
                 enemy.set(
                         mediumRegions,
                         mediumV,
                         MEDIUM_HEIGHT,
-                        MEDIUM_HP,
+                        (int) (MEDIUM_HP * (1 + level * SCORE_INCREMENT)),
                         bulletRegion,
                         MEDIUM_BULLET_HEIGHT,
                         mediumBulletV,
-                        MEDIUM_BULLET_DAMAGE * level,
-                        MEDIUM_BULLET_INTERVAL
+                        (int) (MEDIUM_BULLET_DAMAGE * (1 + level * SCORE_INCREMENT)),
+                        MEDIUM_BULLET_INTERVAL,
+                        (int) (MEDIUM_SCORE * (1 + level * SCORE_INCREMENT))
+
                 );
             } else {
                 enemy.set(
                         bigRegions,
                         bigV,
                         BIG_HEIGHT,
-                        BIG_HP,
+                        (int) (BIG_HP * (1 + level * SCORE_INCREMENT)),
                         bulletRegion,
                         BIG_BULLET_HEIGHT,
                         bigBulletV,
-                        BIG_BULLET_DAMAGE * level,
-                        BIG_BULLET_INTERVAL
+                        (int) (BIG_BULLET_DAMAGE * (1 + level * SCORE_INCREMENT)),
+                        BIG_BULLET_INTERVAL,
+                        (int) (BIG_SCORE * (1 + level * SCORE_INCREMENT))
+
                 );
             }
             enemy.pos.x = Rnd.nextFloat(

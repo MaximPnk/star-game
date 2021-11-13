@@ -7,8 +7,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 
-import java.util.logging.Level;
-
 import ru.pankov.base.BaseScreen;
 import ru.pankov.base.Font;
 import ru.pankov.math.Rect;
@@ -59,7 +57,7 @@ public class GameScreen extends BaseScreen {
 
     private Font font;
     private StringBuilder text;
-    private int frags;
+    private int score;
 
     @Override
     public void show() {
@@ -126,7 +124,7 @@ public class GameScreen extends BaseScreen {
         if (!gameOver) {
             mainSpaceship.update(delta);
             enemyPool.updateAllActive(delta);
-            enemyGenerator.generate(delta, frags);
+            enemyGenerator.generate(delta, score);
             checkCollisions();
         }
         bulletPool.updateAllActive(delta);
@@ -138,7 +136,7 @@ public class GameScreen extends BaseScreen {
             if (e.isIntersect(mainSpaceship, ENEMY_WIDTH_COLLISION, ENEMY_HEIGHT_COLLISION)) {
                 e.destroy();
                 mainSpaceship.damage(e.getHp() * 2);
-                frags++;
+                score += e.getScore();
             }
         }
 
@@ -148,7 +146,7 @@ public class GameScreen extends BaseScreen {
                     if (e.isIntersect(b, BULLET_WIDTH_COLLISION, BULLET_HEIGHT_COLLISION)) {
                         e.damage(b.getDamage());
                         if (e.isDestroyed()) {
-                            frags++;
+                            score += e.getScore();
                         }
                         b.destroy();
                     }
@@ -179,7 +177,7 @@ public class GameScreen extends BaseScreen {
     }
 
     public void newGame() {
-        frags = 0;
+        score = 0;
         gameOver = false;
         mainSpaceship.reset();
         enemyPool.destroyAll();
@@ -189,7 +187,7 @@ public class GameScreen extends BaseScreen {
 
     public void printInfo() {
         text.setLength(0);
-        font.draw(batch, text.append(SCORE_TEXT).append(frags), worldBounds.getLeft() + FONT_MARGIN, worldBounds.getTop() - FONT_MARGIN);
+        font.draw(batch, text.append(SCORE_TEXT).append(score), worldBounds.getLeft() + FONT_MARGIN, worldBounds.getTop() - FONT_MARGIN);
         text.setLength(0);
         font.draw(batch, text.append(HP_TEXT).append(mainSpaceship.getHp()), worldBounds.pos.x, worldBounds.getTop() - FONT_MARGIN, Align.center);
         text.setLength(0);
