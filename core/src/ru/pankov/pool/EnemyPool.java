@@ -5,7 +5,6 @@ import com.badlogic.gdx.audio.Sound;
 import ru.pankov.base.SpritePool;
 import ru.pankov.math.Rect;
 import ru.pankov.sprite.EnemySpaceship;
-import ru.pankov.sprite.MainSpaceship;
 
 public class EnemyPool extends SpritePool<EnemySpaceship> {
 

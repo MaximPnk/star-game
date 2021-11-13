@@ -62,6 +62,12 @@ public abstract class SpritePool<T extends Sprite> {
         return active;
     }
 
+    public void destroyAll() {
+        for (T t : active) {
+            t.destroy();
+        }
+    }
+
     public void dispose() {
         active.clear();
         free.clear();
