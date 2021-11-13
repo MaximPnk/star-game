@@ -11,7 +11,7 @@ import ru.pankov.sprite.EnemySpaceship;
 
 public class EnemyGenerator {
 
-    private static final float GENERATE_INTERVAL = 1;
+    private static final float GENERATE_INTERVAL = 2;
 
     private static final float SMALL_HEIGHT = 0.1f;
     private static final float SMALL_BULLET_HEIGHT = 0.01f;
@@ -48,6 +48,8 @@ public class EnemyGenerator {
     private final TextureRegion[] mediumRegions;
     private final TextureRegion[] bigRegions;
 
+    private int level;
+
     public EnemyGenerator(EnemyPool enemyPool, Rect worldBounds, TextureAtlas atlas) {
         this.enemyPool = enemyPool;
         this.worldBounds = worldBounds;
@@ -55,10 +57,13 @@ public class EnemyGenerator {
         smallRegions = Regions.split(atlas.findRegion("enemy0"), 1, 2,2);
         mediumRegions = Regions.split(atlas.findRegion("enemy1"), 1, 2,2);
         bigRegions = Regions.split(atlas.findRegion("enemy2"), 1, 2,2);
+        level = 1;
     }
 
-    public void generate(float delta) {
-        if ((generateTimer += delta) >= GENERATE_INTERVAL) {
+    public void generate(float delta, int frags) {
+        level = frags / 2 + 1;
+
+        if ((generateTimer += delta) >= GENERATE_INTERVAL - level * 0.05) {
             generateTimer = 0;
             EnemySpaceship enemy = enemyPool.get();
             double type = Math.random();
@@ -71,7 +76,7 @@ public class EnemyGenerator {
                         bulletRegion,
                         SMALL_BULLET_HEIGHT,
                         smallBulletV,
-                        SMALL_BULLET_DAMAGE,
+                        SMALL_BULLET_DAMAGE * level,
                         SMALL_BULLET_INTERVAL
                 );
             } else if (type < 0.9) {
@@ -83,7 +88,7 @@ public class EnemyGenerator {
                         bulletRegion,
                         MEDIUM_BULLET_HEIGHT,
                         mediumBulletV,
-                        MEDIUM_BULLET_DAMAGE,
+                        MEDIUM_BULLET_DAMAGE * level,
                         MEDIUM_BULLET_INTERVAL
                 );
             } else {
@@ -95,7 +100,7 @@ public class EnemyGenerator {
                         bulletRegion,
                         BIG_BULLET_HEIGHT,
                         bigBulletV,
-                        BIG_BULLET_DAMAGE,
+                        BIG_BULLET_DAMAGE * level,
                         BIG_BULLET_INTERVAL
                 );
             }
@@ -107,4 +112,7 @@ public class EnemyGenerator {
         }
     }
 
+    public int getLevel() {
+        return level;
+    }
 }

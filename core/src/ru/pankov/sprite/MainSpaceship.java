@@ -21,11 +21,11 @@ public class MainSpaceship extends Ship {
     private static final float V_DELTA = 0.5f;
     private static final float BOTTOM_MARGIN = 0.04f;
     private static final float BULLET_V_Y = 0.5f;
-    private static final float BULLET_INTERVAL = 0.15f;
+    private static final float BULLET_INTERVAL = 0.2f;
     private static final float BULLET_VOLUME = 0.2f;
     private static final int INVALID_POINTER = -1;
     private static final float EXPLOSION_VOLUME = 0.3f;
-    private static final int HP = 10;
+    private static final int HP = 100;
 
     private boolean leftPressed;
     private boolean rightPressed;

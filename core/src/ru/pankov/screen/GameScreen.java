@@ -5,8 +5,12 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Align;
+
+import java.util.logging.Level;
 
 import ru.pankov.base.BaseScreen;
+import ru.pankov.base.Font;
 import ru.pankov.math.Rect;
 import ru.pankov.pool.BulletPool;
 import ru.pankov.pool.EnemyPool;
@@ -22,12 +26,18 @@ import ru.pankov.utils.EnemyGenerator;
 
 public class GameScreen extends BaseScreen {
 
-    private static final int STAR_COUNT = 64;
+    private static final int STAR_COUNT = 40;
 
     private static final float BULLET_HEIGHT_COLLISION = 0.7f;
     private static final float BULLET_WIDTH_COLLISION = 1f;
     private static final float ENEMY_HEIGHT_COLLISION = 0.5f;
     private static final float ENEMY_WIDTH_COLLISION = 0.9f;
+
+    private static final float FONT_SIZE = 0.025f;
+    private static final float FONT_MARGIN = 0.01f;
+    private static final String SCORE_TEXT = "Score: ";
+    private static final String HP_TEXT = "HP: ";
+    private static final String LEVEL_TEXT = "Level: ";
 
     private boolean gameOver;
 
@@ -46,6 +56,10 @@ public class GameScreen extends BaseScreen {
 
     private ExplosionPool explosionPool;
     private Sound explosionSound;
+
+    private Font font;
+    private StringBuilder text;
+    private int frags;
 
     @Override
     public void show() {
@@ -69,6 +83,9 @@ public class GameScreen extends BaseScreen {
         mainSpaceship = new MainSpaceship(atlas, bulletPool, laserSound, explosionPool, explosionSound);
         enemyPool = new EnemyPool(bulletPool, worldBounds, bulletSound, explosionPool, explosionSound);
         enemyGenerator = new EnemyGenerator(enemyPool, worldBounds, atlas);
+        font = new Font("font/font.fnt", "font/font.png");
+        font.setSize(FONT_SIZE);
+        text = new StringBuilder();
     }
 
     @Override
@@ -89,6 +106,7 @@ public class GameScreen extends BaseScreen {
         update(delta);
         draw();
         freeAllDestroyed();
+        printInfo();
         batch.end();
     }
 
@@ -108,7 +126,7 @@ public class GameScreen extends BaseScreen {
         if (!gameOver) {
             mainSpaceship.update(delta);
             enemyPool.updateAllActive(delta);
-            enemyGenerator.generate(delta);
+            enemyGenerator.generate(delta, frags);
             checkCollisions();
         }
         bulletPool.updateAllActive(delta);
@@ -120,6 +138,7 @@ public class GameScreen extends BaseScreen {
             if (e.isIntersect(mainSpaceship, ENEMY_WIDTH_COLLISION, ENEMY_HEIGHT_COLLISION)) {
                 e.destroy();
                 mainSpaceship.damage(e.getHp() * 2);
+                frags++;
             }
         }
 
@@ -128,6 +147,9 @@ public class GameScreen extends BaseScreen {
                 for (EnemySpaceship e : enemyPool.getAllActive()) {
                     if (e.isIntersect(b, BULLET_WIDTH_COLLISION, BULLET_HEIGHT_COLLISION)) {
                         e.damage(b.getDamage());
+                        if (e.isDestroyed()) {
+                            frags++;
+                        }
                         b.destroy();
                     }
                 }
@@ -157,11 +179,21 @@ public class GameScreen extends BaseScreen {
     }
 
     public void newGame() {
+        frags = 0;
         gameOver = false;
         mainSpaceship.reset();
         enemyPool.destroyAll();
         bulletPool.destroyAll();
         explosionPool.destroyAll();
+    }
+
+    public void printInfo() {
+        text.setLength(0);
+        font.draw(batch, text.append(SCORE_TEXT).append(frags), worldBounds.getLeft() + FONT_MARGIN, worldBounds.getTop() - FONT_MARGIN);
+        text.setLength(0);
+        font.draw(batch, text.append(HP_TEXT).append(mainSpaceship.getHp()), worldBounds.pos.x, worldBounds.getTop() - FONT_MARGIN, Align.center);
+        text.setLength(0);
+        font.draw(batch, text.append(LEVEL_TEXT).append(enemyGenerator.getLevel()), worldBounds.getRight() - FONT_MARGIN, worldBounds.getTop() - FONT_MARGIN, Align.right);
     }
 
     @Override
@@ -179,6 +211,7 @@ public class GameScreen extends BaseScreen {
         enemyPool.dispose();
         explosionPool.dispose();
         explosionSound.dispose();
+        font.dispose();
     }
 
     @Override

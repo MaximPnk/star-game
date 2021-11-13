@@ -73,6 +73,7 @@ public class Ship extends Sprite {
     public void damage(float dmg) {
         this.hp -= dmg;
         if (this.hp <= 0) {
+            this.hp = 0;
             destroy();
         }
 

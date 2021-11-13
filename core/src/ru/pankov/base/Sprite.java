@@ -1,5 +1,6 @@
 package ru.pankov.base;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -23,10 +24,14 @@ public class Sprite extends Rect {
             throw new IllegalArgumentException("region must be not null");
         }
         this.regions = regions;
+        for (TextureRegion r : regions) {
+            r.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        }
     }
 
     public Sprite(TextureRegion region, int rows, int cols, int frames) {
         this.regions = Regions.split(region, rows, cols, frames);
+        region.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     }
 
     public void setProportionalSize(float height) {
