@@ -65,6 +65,8 @@ public class GameScreen extends BaseScreen {
     private StringBuilder text;
     private int score;
 
+    private Pixmap pixmap;
+
     @Override
     public void show() {
         super.show();
@@ -84,7 +86,7 @@ public class GameScreen extends BaseScreen {
         bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
 
-        Pixmap pixmap = new Pixmap(100, 5, Pixmap.Format.RGBA8888);
+        pixmap = new Pixmap(100, 5, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.GREEN);
         pixmap.fill();
         health = new Health(new TextureRegion(new Texture(pixmap)));
@@ -227,7 +229,7 @@ public class GameScreen extends BaseScreen {
         explosionPool.dispose();
         explosionSound.dispose();
         font.dispose();
-        // TODO dispose health
+        pixmap.dispose();
     }
 
     @Override
