@@ -34,10 +34,16 @@ public class Sprite extends Rect {
         region.getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     }
 
-    public void setProportionalSize(float height) {
+    public void setProportionalByHeight(float height) {
         setHeight(height);
         float aspect = regions[frame].getRegionWidth() / (float) regions[frame].getRegionHeight();
         setWidth(height * aspect);
+    }
+
+    public void setProportionalByWidth(float width) {
+        setWidth(width);
+        float aspect = regions[frame].getRegionHeight() / (float) regions[frame].getRegionWidth();
+        setHeight(width * aspect);
     }
 
     public void resize(Rect worldBounds) {

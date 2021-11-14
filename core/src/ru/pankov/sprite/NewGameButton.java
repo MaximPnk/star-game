@@ -20,7 +20,7 @@ public class NewGameButton extends BaseButton {
 
     @Override
     public void resize(Rect worldBounds) {
-        setProportionalSize(worldBounds.getHeight() * SIZE);
+        setProportionalByHeight(worldBounds.getHeight() * SIZE);
         pos.set(0, worldBounds.getBottom() + worldBounds.getHeight() * BUTTON_MARGIN);
     }
 

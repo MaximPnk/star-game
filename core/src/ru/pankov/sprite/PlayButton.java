@@ -24,7 +24,7 @@ public class PlayButton extends BaseButton {
 
     @Override
     public void resize(Rect worldBounds) {
-        setProportionalSize(HEIGHT);
+        setProportionalByHeight(HEIGHT);
         setLeft(worldBounds.getLeft() + worldBounds.getWidth() * 0.15f);
         setBottom(worldBounds.getBottom() + worldBounds.getHeight() * 0.1f);
     }

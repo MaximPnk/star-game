@@ -2,12 +2,13 @@ package ru.pankov.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
-
-import java.util.logging.Level;
 
 import ru.pankov.base.BaseScreen;
 import ru.pankov.base.Font;
@@ -19,6 +20,8 @@ import ru.pankov.sprite.Background;
 import ru.pankov.sprite.Bullet;
 import ru.pankov.sprite.EnemySpaceship;
 import ru.pankov.sprite.GameOver;
+import ru.pankov.sprite.Health;
+import ru.pankov.sprite.HealthBackground;
 import ru.pankov.sprite.MainSpaceship;
 import ru.pankov.sprite.NewGameButton;
 import ru.pankov.sprite.Star;
@@ -36,7 +39,6 @@ public class GameScreen extends BaseScreen {
     private static final float FONT_SIZE = 0.025f;
     private static final float FONT_MARGIN = 0.01f;
     private static final String SCORE_TEXT = "Score: ";
-    private static final String HP_TEXT = "HP: ";
     private static final String LEVEL_TEXT = "Level: ";
 
     private boolean gameOver;
@@ -48,6 +50,8 @@ public class GameScreen extends BaseScreen {
     private TextureAtlas atlas;
     private Star[] stars;
     private MainSpaceship mainSpaceship;
+    private Health health;
+    private HealthBackground healthBackground;
     private BulletPool bulletPool;
     private Sound laserSound;
     private Sound bulletSound;
@@ -59,7 +63,9 @@ public class GameScreen extends BaseScreen {
 
     private Font font;
     private StringBuilder text;
-    private int frags;
+    private int score;
+
+    private Pixmap pixmap;
 
     @Override
     public void show() {
@@ -80,6 +86,14 @@ public class GameScreen extends BaseScreen {
         bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
 
+        pixmap = new Pixmap(100, 5, Pixmap.Format.RGBA8888);
+        pixmap.setColor(Color.GREEN);
+        pixmap.fill();
+        health = new Health(new TextureRegion(new Texture(pixmap)));
+        pixmap.setColor(Color.RED);
+        pixmap.fill();
+        healthBackground = new HealthBackground(new TextureRegion(new Texture(pixmap)));
+
         mainSpaceship = new MainSpaceship(atlas, bulletPool, laserSound, explosionPool, explosionSound);
         enemyPool = new EnemyPool(bulletPool, worldBounds, bulletSound, explosionPool, explosionSound);
         enemyGenerator = new EnemyGenerator(enemyPool, worldBounds, atlas);
@@ -98,6 +112,8 @@ public class GameScreen extends BaseScreen {
             star.resize(worldBounds);
         }
         mainSpaceship.resize(worldBounds);
+        health.resize(worldBounds);
+        healthBackground.resize(worldBounds);
     }
 
     @Override
@@ -126,7 +142,8 @@ public class GameScreen extends BaseScreen {
         if (!gameOver) {
             mainSpaceship.update(delta);
             enemyPool.updateAllActive(delta);
-            enemyGenerator.generate(delta, frags);
+            enemyGenerator.generate(delta, score);
+            health.update(delta, worldBounds, mainSpaceship.getHp());
             checkCollisions();
         }
         bulletPool.updateAllActive(delta);
@@ -138,7 +155,7 @@ public class GameScreen extends BaseScreen {
             if (e.isIntersect(mainSpaceship, ENEMY_WIDTH_COLLISION, ENEMY_HEIGHT_COLLISION)) {
                 e.destroy();
                 mainSpaceship.damage(e.getHp() * 2);
-                frags++;
+                score += e.getScore();
             }
         }
 
@@ -148,7 +165,7 @@ public class GameScreen extends BaseScreen {
                     if (e.isIntersect(b, BULLET_WIDTH_COLLISION, BULLET_HEIGHT_COLLISION)) {
                         e.damage(b.getDamage());
                         if (e.isDestroyed()) {
-                            frags++;
+                            score += e.getScore();
                         }
                         b.destroy();
                     }
@@ -167,19 +184,21 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars) {
             star.draw(batch);
         }
+        bulletPool.drawAllActive(batch);
+        explosionPool.drawAllActive(batch);
         if (!gameOver) {
             mainSpaceship.draw(batch);
             enemyPool.drawAllActive(batch);
+            healthBackground.draw(batch);
+            health.draw(batch);
         } else {
             gameOverMsg.draw(batch);
             newGameButton.draw(batch);
         }
-        bulletPool.drawAllActive(batch);
-        explosionPool.drawAllActive(batch);
     }
 
     public void newGame() {
-        frags = 0;
+        score = 0;
         gameOver = false;
         mainSpaceship.reset();
         enemyPool.destroyAll();
@@ -189,9 +208,7 @@ public class GameScreen extends BaseScreen {
 
     public void printInfo() {
         text.setLength(0);
-        font.draw(batch, text.append(SCORE_TEXT).append(frags), worldBounds.getLeft() + FONT_MARGIN, worldBounds.getTop() - FONT_MARGIN);
-        text.setLength(0);
-        font.draw(batch, text.append(HP_TEXT).append(mainSpaceship.getHp()), worldBounds.pos.x, worldBounds.getTop() - FONT_MARGIN, Align.center);
+        font.draw(batch, text.append(SCORE_TEXT).append(score), worldBounds.getLeft() + FONT_MARGIN, worldBounds.getTop() - FONT_MARGIN);;
         text.setLength(0);
         font.draw(batch, text.append(LEVEL_TEXT).append(enemyGenerator.getLevel()), worldBounds.getRight() - FONT_MARGIN, worldBounds.getTop() - FONT_MARGIN, Align.right);
     }
@@ -212,6 +229,7 @@ public class GameScreen extends BaseScreen {
         explosionPool.dispose();
         explosionSound.dispose();
         font.dispose();
+        pixmap.dispose();
     }
 
     @Override

@@ -53,7 +53,7 @@ public class MainSpaceship extends Ship {
     @Override
     public void resize(Rect worldBounds) {
         this.worldBounds = worldBounds;
-        setProportionalSize(HEIGHT);
+        setProportionalByHeight(HEIGHT);
         setBottom(worldBounds.getBottom() + BOTTOM_MARGIN);
     }
 

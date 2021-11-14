@@ -18,6 +18,8 @@ public class EnemySpaceship extends Ship {
     private final Vector2 startV;
     private final Vector2 gameV;
 
+    private int score;
+
     public EnemySpaceship(BulletPool bulletPool, Rect worldBounds, Sound bulletSound, ExplosionPool explosionPool, Sound explosionSound) {
         this.bulletPool = bulletPool;
         this.worldBounds = worldBounds;
@@ -56,19 +58,24 @@ public class EnemySpaceship extends Ship {
             float bulletHeight,
             Vector2 bulletV,
             int bulletDamage,
-            float bulletInterval
+            float bulletInterval,
+            int score
     ) {
         ready = false;
         this.regions = regions;
         this.gameV.set(v);
         this.v.set(startV);
-        setProportionalSize(height);
+        setProportionalByHeight(height);
         this.hp = hp;
         this.bulletRegion = bulletRegion;
         this.bulletHeight = bulletHeight;
         this.bulletV.set(bulletV);
         this.bulletDmg = bulletDamage;
         this.bulletInterval = bulletInterval;
+        this.score = score;
     }
 
+    public int getScore() {
+        return score;
+    }
 }
