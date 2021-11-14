@@ -65,7 +65,7 @@ public class EnemySpaceship extends Ship {
         this.regions = regions;
         this.gameV.set(v);
         this.v.set(startV);
-        setProportionalSize(height);
+        setProportionalByHeight(height);
         this.hp = hp;
         this.bulletRegion = bulletRegion;
         this.bulletHeight = bulletHeight;
